@@ -177,3 +177,6 @@ pyrightconfig.json
 
 # Advent of Code Inputs
 inputs/
+
+# Macos stuff
+.DS_Store
