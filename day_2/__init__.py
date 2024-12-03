@@ -9,23 +9,10 @@ class Report(list):
         for i in range(1, len(self)):
             diffs.append(self[i] - self[i-1])
         return diffs
-
-def parse_input(path: str):
-    reports = []
-    with open(path) as file:
-        for line in file:
-            line = line.strip().split()
-            line = [int(n) for n in line]
-            reports.append(Report(line))
-    return reports
-
-def solve_part_1(path: str):
-    reports = parse_input(path)
-    number_safe = 0
-    for report in reports:
-        diffs = report.differences_list
+    
+    def is_safe(self):
+        diffs = self.differences_list
         # Amount increasing/Decreasing between 1 and 3 check
-        previous_diff = None
         safe = True
         for diff in diffs:
             if not ((abs(diff) >= 1) and (abs(diff) <= 3)):
@@ -50,12 +37,40 @@ def solve_part_1(path: str):
                 if diff > 0:
                     safe = False
                     break
-        if safe:
+        return safe
+
+def parse_input(path: str):
+    reports = []
+    with open(path) as file:
+        for line in file:
+            line = line.strip().split()
+            line = [int(n) for n in line]
+            reports.append(Report(line))
+    return reports
+
+def solve_part_1(path: str):
+    reports = parse_input(path)
+    number_safe = 0
+    for report in reports:
+        if report.is_safe():
             number_safe += 1
 
     return number_safe
 
 def solve_part_2(path: str):
-    pass
-
-
+    reports = parse_input(path)
+    number_safe = 0
+    for report in reports:
+        safe = False
+        if report.is_safe():
+            safe = True
+        report_copy = report.copy()
+        for i in range(0, len(report)):
+            report_copy = Report(report.copy())
+            report_copy.pop(i)
+            if report_copy.is_safe():
+                safe = True
+                break
+        if safe:
+            number_safe += 1
+    return number_safe
